@@ -44,3 +44,5 @@ products = product_regex.findall(result_text)
 # Display extracted products
 for product in products:
     print(f"Product Name: {product[0]}, Barcode: {product[1]}, Price: {product[2]}")
+
+### FIXME # Connect this to JS
