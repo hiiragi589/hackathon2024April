@@ -1,6 +1,7 @@
 # hackathon2024April
-### Edo's Note (per April 19th, 21:58)
 Mobile App Development
+
+### Edo's Note (per April 19th, 21:58)
 
 Please add your venv directly under OCR folder
 
