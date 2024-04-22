@@ -27,4 +27,4 @@ How to try the receipt analyzer
 1. excute ```myvenv\Scripts\activate```
     1. ```cd python```
     1. ```python .\analyzer.py```
-1. open another terminal and ```curl -X POST -H "Content-Type: application/json" -d @.\OCR\Assets\Receipt6.json http://localhost:5000/upload```
+1. open another terminal and ```curl -X POST -H "Content-Type: application/json" -d @(???)\hackathon2024April\OCR\Assets\Receipt6.json http://localhost:5000/upload```
