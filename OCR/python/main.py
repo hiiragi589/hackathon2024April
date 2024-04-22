@@ -19,7 +19,7 @@ def convert_circled_numerals_to_arabic(text):
     }
     return ''.join(circled_numeral_mapping.get(char, char) for char in text)
 
-img = cv2.imread(".\\..\\Assets\\Receipt6.jpg") #FIXME #Connect this to img from JS
+img = cv2.imread(".\\..\\Assets\\Receipt5.jpg") #FIXME #Connect this to img from JS
 bw_image= cropImage(img)
 pil_image = Image.fromarray(bw_image)
 enhancer = ImageEnhance.Contrast(pil_image)
