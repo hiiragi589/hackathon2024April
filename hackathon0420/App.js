@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { useLoadedAssets } from "./hooks/useLoadedAssets";
-import Navigation from "./navigation";
+import Navigation from "./navigation";   //navigation/index.jsで定義されている
 import { useColorScheme } from "react-native";
 
 export default function App() {
