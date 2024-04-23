@@ -1,13 +1,24 @@
 import "react-native-gesture-handler";
 
-import { StatusBar } from "expo-status-bar";
+/*import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { useLoadedAssets } from "./hooks/useLoadedAssets";
 import Navigation from "./navigation";
-import { useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";*/
 
-export default function App() {
+import React from 'react';
+import CameraScreen from './CameraScreen.tsx';
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <CameraScreen />
+    );
+  }
+}
+
+/*export default function App() {
   const isLoadingComplete = useLoadedAssets();
   const colorScheme = useColorScheme();
 
@@ -21,4 +32,4 @@ export default function App() {
       </SafeAreaProvider>
     );
   }
-}
+}*/
