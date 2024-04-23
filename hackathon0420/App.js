@@ -119,7 +119,26 @@ const App = () => {
 
   function findUserById(userId) {
     return users.find(user => user.id === userId);
-  }
+
+    //my change
+// import { useLoadedAssets } from "./hooks/useLoadedAssets";
+// import Navigation from "./navigation";   //navigation/index.jsで定義されている
+// import { useColorScheme } from "react-native";
+
+// export default function App() {
+//   const isLoadingComplete = useLoadedAssets();
+//   const colorScheme = useColorScheme();
+
+//   if (!isLoadingComplete) {
+//     return null;
+//   } else {
+//     return (
+//       <SafeAreaProvider>
+//         <Navigation colorScheme={colorScheme} />
+//         <StatusBar />
+//       </SafeAreaProvider>
+//     );
+//   }
   function findReceiptById(receiptId) {
     return receipts.find(receipt => receipt.id === receiptId);
   }

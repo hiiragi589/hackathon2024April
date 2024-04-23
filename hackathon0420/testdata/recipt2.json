@@ -1,0 +1,16 @@
+[
+  {
+    "storeName": "Book Haven",
+    "date": "2024/4/20",
+    "totalPrice": 30.50,
+    "amountPaid": 15.25,
+    "products": [
+      {
+        "id": 1,
+        "productName": "Fiction Book",
+        "pricePerPiece": 15.25,
+        "quantity": 2
+      }
+    ]
+  }
+]
