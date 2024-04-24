@@ -10,7 +10,7 @@ import cv2
 
 
 
-img = cv2.imread(".\\..\\Assets\\Receipt5.jpg") #FIXME #Connect this to img from JS
+img = cv2.imread(".\\..\\Assets\\Receipt6.jpg") #FIXME #Connect this to img from JS
 bw_image= cropImage(img)
 pil_image = Image.fromarray(bw_image)
 enhancer = ImageEnhance.Contrast(pil_image)
