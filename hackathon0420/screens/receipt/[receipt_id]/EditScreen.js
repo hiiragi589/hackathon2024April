@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, FlatList,Button,TouchableOpacity } from 'react-native';
 
-const ClickableCircle = ({ letter, color }) => {
-    const [isActive, setIsActive] = useState(false);
+const ClickableCircle = ({ letter, color,startingStatus }) => {
+    const [isActive, setIsActive] = useState(startingStatus);
     const handlePress = () => {
       setIsActive(!isActive); // Toggle the active state
     };
@@ -22,7 +22,11 @@ const ClickableCircle = ({ letter, color }) => {
     );
   };
 
-const ProductItem = ({ productName, price, quantity,users }) => {
+function checkIfUserConsumed(consumedBy, id) {
+    return consumedBy.some(consumption => consumption.userId === id);
+}
+
+const ProductItem = ({ productName, price, quantity,consumedBy,users }) => {
     return (
       <View style={styles.productItemContainer}>
         <Text style={styles.productDetail}>{productName}</Text>
@@ -33,7 +37,7 @@ const ProductItem = ({ productName, price, quantity,users }) => {
         horizontal={true}
         keyExtractor={user => user.id.toString()}
         renderItem={({ item }) => (
-            <ClickableCircle letter={item.letter} color={item.color}/>
+            <ClickableCircle letter={item.letter} color={item.color} startingStatus={checkIfUserConsumed(consumedBy, item.id)}/>
         )}
       />
         </View>
@@ -65,6 +69,7 @@ const EditScreen = ({receipt,users}) => {
             price={item.price}
             quantity={item.quantity}
             users={users}
+            consumedBy={item.consumedBy}
           />
         )}
       />
