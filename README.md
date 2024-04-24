@@ -25,6 +25,6 @@ receipt analyzer passed the local check!
 How to try the receipt analyzer
 1. chenge directory to hackathon2024April/OCR
 1. excute ```myvenv\Scripts\activate```
-    1. ```cd python```
+    1. ```cd pythonAPI``` (**change Directory Name!!**)
     1. ```python .\analyzer.py```
 1. open another terminal and ```curl -X POST -H "Content-Type: application/json" -d @(???)\hackathon2024April\OCR\Assets\Receipt6.json http://localhost:5000/upload```
