@@ -2,11 +2,22 @@ import numpy as np
 import cv2
 import os
 import math
-import pyautogui as pag
+# import pyautogui as pag
+
+# move here from analyzer
+def convert_circled_numerals_to_arabic(text):
+    circled_numeral_mapping = {
+        '①': '1', '②': '2', '③': '3', '④': '4',
+        '⑤': '5', '⑥': '6', '⑦': '7', '⑧': '8',
+        '⑨': '9', '⑩': '10', '⑪': '11', '⑫': '12',
+        '⑬': '13', '⑭': '14', '⑮': '15', '⑯': '16',
+        '⑰': '17', '⑱': '18', '⑲': '19', '⑳': '20'
+    }
+    return ''.join(circled_numeral_mapping.get(char, char) for char in text)
 
 
 def cropImage(img) : 
-    printimg("Original Image", img)
+    # printimg("Original Image", img)
     if img.shape[1] > 900:
         img = cv2.resize(img, (int(img.shape[1] * 900 / img.shape[1]), int(img.shape[0] * 900 / img.shape[1])))
     if img.shape[0] > 900:
@@ -15,7 +26,7 @@ def cropImage(img) :
     lineimg, linelist = getline(img, edgeimg)  # ハフ変換で直線検出
     reducelineimg, reduceline = cleanline(img, linelist)  # 直線の本数を減らす
     coordinate = getcoordinate(reduceline, edgeimg.shape)  # 候補となるオブジェクトをただ1つ取得した
-    print("coordinate=" + str(coordinate))
+    # print("coordinate=" + str(coordinate))
     ### FIXME # send to JS some flag value
     if len(coordinate) == 0:
         print("Cant detect whiteboard here, please manually choose the coordinate")
@@ -34,7 +45,7 @@ def cropImage(img) :
         # grayImage = cv2.cvtColor(newimg, cv2.COLOR_BGR2GRAY)
         # (_, bwImage) =  cv2.threshold(grayImage, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         
-        printimg("result", contrastImg)
+        # printimg("result", contrastImg)
         return contrastImg
     cv2.destroyAllWindows()
 
@@ -395,19 +406,19 @@ def level1(img):
     return []
 
 
-def printimg(word, img):
-    cv2.namedWindow(word)  # Create a named window
-    scr_w, scr_h = pag.size()
-    if word != "result":
-        cv2.moveWindow(word, int(scr_w * 0.1), int(scr_h * 0.1))
-    else:
-        cv2.moveWindow(word, 800, 500)
-    if img.shape[1] > scr_w:
-        img = cv2.resize(img, (int(img.shape[1]*scr_w/img.shape[1]), int(img.shape[0]*scr_w/img.shape[1])))
-    if img.shape[0] > scr_h:
-        img = cv2.resize(img, (int(img.shape[1] * scr_h / img.shape[0]), int(img.shape[0] * scr_h / img.shape[0])))
-    cv2.imshow(word, img)
-    cv2.waitKey(0)
+# def printimg(word, img):
+#     cv2.namedWindow(word)  # Create a named window
+#     scr_w, scr_h = pag.size()
+#     if word != "result":
+#         cv2.moveWindow(word, int(scr_w * 0.1), int(scr_h * 0.1))
+#     else:
+#         cv2.moveWindow(word, 800, 500)
+#     if img.shape[1] > scr_w:
+#         img = cv2.resize(img, (int(img.shape[1]*scr_w/img.shape[1]), int(img.shape[0]*scr_w/img.shape[1])))
+#     if img.shape[0] > scr_h:
+#         img = cv2.resize(img, (int(img.shape[1] * scr_h / img.shape[0]), int(img.shape[0] * scr_h / img.shape[0])))
+#     cv2.imshow(word, img)
+#     cv2.waitKey(0)
 
 
 # 有効化されているコードからの呼び出しはない

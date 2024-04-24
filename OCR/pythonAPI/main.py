@@ -1,5 +1,6 @@
 import pytesseract
 from PIL import Image, ImageEnhance, ImageFilter
+from utils import cropImage, convert_circled_numerals_to_arabic 
 import re
 import cv2
 from skimage.filters import threshold_local
@@ -7,17 +8,7 @@ import numpy as np
 from pathlib import Path
 import cv2
 
-from utils import cropImage
 
-def convert_circled_numerals_to_arabic(text):
-    circled_numeral_mapping = {
-        '①': '1', '②': '2', '③': '3', '④': '4',
-        '⑤': '5', '⑥': '6', '⑦': '7', '⑧': '8',
-        '⑨': '9', '⑩': '10', '⑪': '11', '⑫': '12',
-        '⑬': '13', '⑭': '14', '⑮': '15', '⑯': '16',
-        '⑰': '17', '⑱': '18', '⑲': '19', '⑳': '20'
-    }
-    return ''.join(circled_numeral_mapping.get(char, char) for char in text)
 
 img = cv2.imread(".\\..\\Assets\\Receipt5.jpg") #FIXME #Connect this to img from JS
 bw_image= cropImage(img)
