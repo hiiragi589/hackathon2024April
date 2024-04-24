@@ -2,7 +2,6 @@ import pytesseract
 from PIL import Image, ImageEnhance, ImageFilter
 from flask_cors import CORS
 from flask import Flask, request, jsonify
-import sys; print(sys.path)
 from .utils import cropImage, convert_circled_numerals_to_arabic
 import re
 import cv2
@@ -12,6 +11,8 @@ from pathlib import Path
 import base64
 import io
 import json
+
+pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 app = Flask('Tesseract-OCR-API')
 app.json.ensure_ascii = False
