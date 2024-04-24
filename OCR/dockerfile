@@ -1,0 +1,28 @@
+# Python 3.12 ベースイメージを使用
+FROM python:3.12
+
+# 必要なパッケージをインストール
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-jpn \
+    libtesseract-dev \
+    libopencv-dev \
+    python3-opencv \
+    && rm -rf /var/lib/apt/lists/*
+
+# Tesseract の PATH を設定（必要に応じて）
+ENV PATH="/usr/local/bin/tesseract:${PATH}"
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# 依存関係のファイルをコピーし、インストール
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# アプリケーションのファイルをコピー
+COPY . /app
+
+# アプリケーションを実行
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "pythonAPI.analyzer:app"]
+
