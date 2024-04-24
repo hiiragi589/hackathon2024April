@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, FlatList,Button,TouchableOpacity } from 'react-native';
 
-const ClickableCircle = ({ letter, color,startingStatus }) => {
+const ClickableCircle = ({ letter, color,startingStatus,onToggle }) => {
     const [isActive, setIsActive] = useState(startingStatus);
     const handlePress = () => {
-      setIsActive(!isActive); // Toggle the active state
+      const newActiveStatus = !isActive; 
+      setIsActive(!isActive);
+      onToggle();
     };
     return (
       <TouchableOpacity onPress={handlePress} style={[
@@ -26,7 +28,7 @@ function checkIfUserConsumed(consumedBy, id) {
     return consumedBy.some(consumption => consumption.userId === id);
 }
 
-const ProductItem = ({ productName, price, quantity,consumedBy,users }) => {
+const ProductItem = ({ productName, price, quantity,consumedBy,users,onToggleProductUser  }) => {
     return (
       <View style={styles.productItemContainer}>
         <Text style={styles.productDetail}>{productName}</Text>
@@ -37,7 +39,8 @@ const ProductItem = ({ productName, price, quantity,consumedBy,users }) => {
         horizontal={true}
         keyExtractor={user => user.id.toString()}
         renderItem={({ item }) => (
-            <ClickableCircle letter={item.letter} color={item.color} startingStatus={checkIfUserConsumed(consumedBy, item.id)}/>
+            <ClickableCircle letter={item.letter} color={item.color} startingStatus={checkIfUserConsumed(consumedBy, item.id)}
+            onToggle={()=>onToggleProductUser(item.id)}/>
         )}
       />
         </View>
@@ -47,11 +50,26 @@ const ProductItem = ({ productName, price, quantity,consumedBy,users }) => {
 
 // Receipt component
 const EditScreen = ({receipt,users}) => {
-  // Calculate total cost
+  const [productConsumption, setProductConsumption] = useState(receipt.products);
+const handleToggleConsumption = (productId, userId) => {
+  const newProductConsumption = productConsumption.map(product =>
+      product.id === productId ? {
+          ...product,
+          consumedBy: checkIfUserConsumed(product.consumedBy, userId) ?
+                product.consumedBy.filter(consume => consume.userId !== userId) // Remove user
+                : [...product.consumedBy, { userId, quantity: 1 }] // Add user with a default quantity
+        } : product
+  );
+  setProductConsumption(newProductConsumption);
+};
+const handleConfirmChanges = () => {
+  // Here you would typically update your backend or a higher state
+  console.log('Updated Consumption:',JSON.stringify(productConsumption, null, 2));
+};
   return (
     <View style={styles.receiptContainer}>
       <View style={styles.edit}>
-        <Button title='Confirm Change?' style={styles.button}/>
+        <Button title='Confirm Change?' onPress={handleConfirmChanges} style={styles.button}/>
       </View>
       <Text style={styles.title}>{receipt.storeName}</Text>
       <View style={styles.productItemContainer}>
@@ -70,6 +88,7 @@ const EditScreen = ({receipt,users}) => {
             quantity={item.quantity}
             users={users}
             consumedBy={item.consumedBy}
+            onToggleProductUser={userId => handleToggleConsumption(item.id, userId)}
           />
         )}
       />
