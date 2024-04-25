@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet, View, Text,ActivityIndicator } from "react-na
 export const Loading = ({word}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{word}||Loading...</Text>
+      <Text style={styles.text}>{word||"Loading..."}</Text>
       <ActivityIndicator size="large" color="#0000ff" />
     </View>
   );
