@@ -1,34 +1,102 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 
 import { Button } from "react-native";   //ボタンで画面遷移
 
-import ReciptData from "../components/ReciptData"
+import ReceiptData from "../components/ReceiptData"
+import MainScreen from '../screens/receipt/MainScreen'; 
+import Receipt from '../screens/receipt/[receipt_id]/index';
+import EditScreen from '../screens/receipt/[receipt_id]/EditScreen';
+import { Header } from '../screens/Header';
 
-export default function HomeScreen({ navigation }) {   //9.HomeScreenの内容、components/EditScreenInfoを参照
+const receipts = [
+    {
+      storeName: "Supermart",
+      memo: "Grocery shopping on 20th April 2020 with A and B.",
+      products: [
+        {
+          id: 1,
+          productName: "Milk",
+          price: 200,
+          quantity: 2
+        },
+        {
+          id: 2,
+          productName: "Bread",
+          price: 100,
+          quantity: 1
+        }
+      ]
+    },
+    {
+      storeName: "Book Haven",
+      memo: " Book shopping on 20th April 2020 with A, B, and C.",
+      products: [
+        {
+          id: 1,
+          productName: "Fiction Book",
+          price: 1500,
+          quantity: 2
+        }
+      ]
+    }
+  ];
+
+  const users = [
+    {
+      id:1,
+      letter: "A",
+      color: "red",
+    },
+    {
+      id:2,
+      letter: "B",
+      color: "green",
+    },
+    {
+      id:3,
+      letter: "C",
+      color: "orange",
+    },
+    {
+      id:4,
+      letter: "D",
+      color: "pink",
+    }
+  ];
+
+const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/EditScreenInfoを参照
     // const jsonFilePath1 = require('../testdata/recipt1.json');
     // const jsonFilePath2 = require('../testdata/recipt2.json');
   return (
-    <View style={styles.container}>
+    <ScrollView style={{flex: 1}}>
+    {/* <View style={styles.container}> */}
       {/* <Text style={styles.title}>Home</Text> */}
-      <View
+      {/* <View
         style={styles.separator}
-        lightColor="#eee"
+        lightColor="#aaa"
         darkColor="rgba(255,255,255,0.1)"
-      />
+      /> */}
       {/* <EditScreenInfo path="/screens/HomeScreen.js" /> */}
 
-      <ReciptData/>
+      {/* home画面の本体 */}
+      {receipts.map((receipt) => (
+        <View key={receipt.id}>
+        <ReceiptData receipt={receipt}/>
+        </View>
+      ))}
 
-      <Button
-        title="Add new"
-        onPress={() =>
-          navigation.navigate("NewReciptScreen")
-        }
-      />
-    </View>
+      {/* <ReceiptData receipt={receipts[0]}/> */}
+      {/* <Header word='Mainscreen' user={users[2]}/> */}
+      {/* <MainScreen receipts={receipts}/> */}
+      {/* <Header word='Receipt1' user={users[2]}/> */}
+      {/* <Receipt receipt={receipts[0]} user={users[2]}/> */}
+      {/* <Header word='Receipt1' user={users[2]}/> */}
+      {/* <EditScreen receipt={receipts[0]} users={users}/> */}
+      
+    </ScrollView>
   );
 }
 
@@ -48,3 +116,5 @@ const styles = StyleSheet.create({
     width: "80%",
   },
 });
+
+export default HomeScreen;

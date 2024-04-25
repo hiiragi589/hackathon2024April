@@ -1,9 +1,13 @@
 import React from 'react';
-import { View,ScrollView } from 'react-native';
+import { View,ScrollView, StatusBar } from 'react-native';
 import MainScreen from './screens/receipt/MainScreen'; 
 import Receipt from './screens/receipt/[receipt_id]/index';
 import EditScreen from './screens/receipt/[receipt_id]/EditScreen';
 import { Header } from './screens/Header';
+import Navigation from './navigation';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import 'react-native-gesture-handler';
+
 const receipts = [
   {
     storeName: "Supermart",
@@ -53,24 +57,39 @@ const users = [
     color: "orange",
   },
   {
-    id:3,
+    id:4,
     letter: "D",
     color: "pink",
   }
 ];
 const App = () => {
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
-        <Header word='Mainscreen' user={users[2]}/>
-        <MainScreen receipts={receipts}/>
-        <Header word='Receipt1' user={users[2]}/>
-        <Receipt receipt={receipts[0]} user={users[2]}/>
-        <Header word='Receipt1' user={users[2]}/>
-        <EditScreen receipt={receipts[0]} users={users}/>
-      </ScrollView>
-    </View>
+    <SafeAreaProvider>
+    {/* <ScrollView style={{ flex: 1 }}> */}
+          <Navigation />
+          {/* <StatusBar /> */}
+          {/* <Header word='Mainscreen' user={users[2]}/> */}
+          {/* <MainScreen receipts={receipts}/> */}
+          {/* <Header word='Receipt1' user={users[2]}/> */}
+          {/* <Receipt receipt={receipts[0]} user={users[2]}/> */}
+          {/* <Header word='Receipt1' user={users[2]}/> */}
+          {/* <EditScreen receipt={receipts[0]} users={users}/> */}
+    {/* </ScrollView> */}
+    </SafeAreaProvider>
 
   );
 };
 export default App;
+
+  {/* <View style={{ flex: 1 }}> */}
+    {/* <View> */}
+      {/* <ScrollView> */}
+      {/* <Header word='Mainscreen' user={users[2]}/>
+        <MainScreen receipts={receipts}/>
+        <Header word='Receipt1' user={users[2]}/>
+        <Receipt receipt={receipts[0]} user={users[2]}/>
+        <Header word='Receipt1' user={users[2]}/>
+        <EditScreen receipt={receipts[0]} users={users}/> */}
+    {/* </View> */}
+  {/* </ScrollView> */}
+      
