@@ -31,7 +31,7 @@ def cropImage(img) :
         newimg = image_processor(img, coordinate[0])
         resizedImg = resize_image(newimg)
         contrastImg = adjust_brightness_contrast(resizedImg, 0.8)
-        # grayImage = cv2.cvtColor(newimg, cv2.COLOR_BGR2GRAY)
+        # grayImage = cv2.cvtColor(contrastImg, cv2.COLOR_BGR2GRAY)
         # (_, bwImage) =  cv2.threshold(grayImage, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         
         printimg("result", contrastImg)
