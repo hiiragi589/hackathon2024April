@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { View, Text, StyleSheet, FlatList,Button,TouchableOpacity } from 'react-native';
+import { supabase } from '../../../lib/supabase'
 
 const ClickableCircle = ({ letter, color,startingStatus,onToggle }) => {
     const [isActive, setIsActive] = useState(startingStatus);
@@ -62,14 +63,27 @@ const handleToggleConsumption = (productId, userId) => {
   );
   setProductConsumption(newProductConsumption);
 };
-const handleConfirmChanges = () => {
-  // Here you would typically update your backend or a higher state
+const handleConfirmChanges = async (receiptId) => {
+  try {
+    const { data, error } = await supabase
+      .from('receipts')
+      .update({ products: productConsumption })
+      .match({ id: receiptId });
+
+    if (error) {
+      console.error('Error updating receipt:', error);
+    } else {
+      console.log('Receipt updated successfully:', data);
+    }
+  } catch (err) {
+    console.error('Unexpected error during update:', err);
+  }
   console.log('Updated Consumption:',JSON.stringify(productConsumption, null, 2));
 };
   return (
     <View style={styles.receiptContainer}>
       <View style={styles.edit}>
-        <Button title='Confirm Change?' onPress={handleConfirmChanges} style={styles.button}/>
+        <Button title='Confirm Change?' onPress={() =>handleConfirmChanges(receipt.id)} style={styles.button}/>
       </View>
       <Text style={styles.title}>{receipt.storeName}</Text>
       <View style={styles.productItemContainer}>
