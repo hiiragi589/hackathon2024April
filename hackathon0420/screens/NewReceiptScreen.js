@@ -3,12 +3,12 @@ import { StyleSheet } from "react-native";
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 
-export default function NewReciptScreen() {
+export default function NewReceiptScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>New Recipt</Text>
       <Text style={styles.container}>
-        Use your camera and take a picture of recipts!
+        Use your camera and take a picture of receipts!
       </Text>
       <View
         style={styles.separator}

@@ -1,15 +1,9 @@
-<<<<<<< HEAD
 import React,{useState,useEffect} from 'react';
 import { View,ScrollView,Text,SafeAreaView,StyleSheet } from 'react-native';
-=======
-import React from 'react';
-import { View,ScrollView } from 'react-native';
->>>>>>> 58d9f2c (fixed conflict and updated others' change)
 import MainScreen from './screens/receipt/MainScreen'; 
 import Receipt from './screens/receipt/[receipt_id]/index';
 import EditScreen from './screens/receipt/[receipt_id]/EditScreen';
 import { Header } from './screens/Header';
-<<<<<<< HEAD
 import { Loading } from './screens/Loading';
 import { supabase } from './lib/supabase'
 // const receipts = [
@@ -125,29 +119,32 @@ const App = () => {
 
   function findUserById(userId) {
     return users.find(user => user.id === userId);
+  }
 
     //my change
-// import { useLoadedAssets } from "./hooks/useLoadedAssets";
-// import Navigation from "./navigation";   //navigation/index.jsで定義されている
-// import { useColorScheme } from "react-native";
+  // import { useLoadedAssets } from "./hooks/useLoadedAssets";
+  // import Navigation from "./navigation";   //navigation/index.jsで定義されている
+  // import { useColorScheme } from "react-native";
 
-// export default function App() {
-//   const isLoadingComplete = useLoadedAssets();
-//   const colorScheme = useColorScheme();
+  // export default function App() {
+  //   const isLoadingComplete = useLoadedAssets();
+  //   const colorScheme = useColorScheme();
 
-//   if (!isLoadingComplete) {
-//     return null;
-//   } else {
-//     return (
-//       <SafeAreaProvider>
-//         <Navigation colorScheme={colorScheme} />
-//         <StatusBar />
-//       </SafeAreaProvider>
-//     );
-//   }
+  //   if (!isLoadingComplete) {
+  //     return null;
+  //   } else {
+  //     return (
+  //       <SafeAreaProvider>
+  //         <Navigation colorScheme={colorScheme} />
+  //         <StatusBar />
+  //       </SafeAreaProvider>
+  //     );
+  //   }
+
   function findReceiptById(receiptId) {
     return receipts.find(receipt => receipt.id === receiptId);
   }
+
   return (
     <View style={{ flex: 1 }}>
       {isUsersLoading || isReceiptsLoading ? (
@@ -164,84 +161,15 @@ const App = () => {
           <EditScreen receipt={findReceiptById(1)} users={users} />
         </ScrollView>
       )}
-=======
-const receipts = [
-  {
-    storeName: "Supermart",
-    memo: "Grocery shopping on 20th April 2020 with A and B.",
-    products: [
-      {
-        id: 1,
-        productName: "Milk",
-        price: 200,
-        quantity: 2
-      },
-      {
-        id: 2,
-        productName: "Bread",
-        price: 100,
-        quantity: 1
-      }
-    ]
-  },
-  {
-    storeName: "Book Haven",
-    memo: " Book shopping on 20th April 2020 with A, B, and C.",
-    products: [
-      {
-        id: 1,
-        productName: "Fiction Book",
-        price: 1500,
-        quantity: 2
-      }
-    ]
-  }
-];
-const users = [
-  {
-    id:1,
-    letter: "A",
-    color: "red",
-  },
-  {
-    id:2,
-    letter: "B",
-    color: "green",
-  },
-  {
-    id:3,
-    letter: "C",
-    color: "orange",
-  },
-  {
-    id:3,
-    letter: "D",
-    color: "pink",
-  }
-];
-const App = () => {
-  return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
-        <Header word='Mainscreen' user={users[2]}/>
-        <MainScreen receipts={receipts}/>
-        <Header word='Receipt1' user={users[2]}/>
-        <Receipt receipt={receipts[0]} user={users[2]}/>
-        <Header word='Receipt1' user={users[2]}/>
-        <EditScreen receipt={receipts[0]} users={users}/>
-      </ScrollView>
->>>>>>> 58d9f2c (fixed conflict and updated others' change)
     </View>
 
   );
 };
-<<<<<<< HEAD
 
 const styles = StyleSheet.create({
   fullScreen: {
     flex: 1
   }
 });
-=======
->>>>>>> 58d9f2c (fixed conflict and updated others' change)
-export default App;
+
+// export default App;
