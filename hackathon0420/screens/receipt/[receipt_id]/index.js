@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList,Button } from 'react-native';
 
-<<<<<<< HEAD
 const calculatedPrice = (product,id) => {
   const totalPrice  = product.quantity * product.price;
   const totalShare = product.consumedBy.reduce((sum, consumption) => sum + consumption.quantity, 0);
@@ -16,15 +15,6 @@ const ProductItem = ({ product,user }) => {
         <Text style={styles.productDetail}>{product.quantity}</Text>
         <Text style={[styles.userPrice,{color: user.color}]}>{calculatedPrice(product,user.id)}円 </Text>
         <Text style={styles.productPrice}>/ {product.quantity * product.price}円</Text>
-=======
-const ProductItem = ({ productName, price, quantity,userColor }) => {
-    return (
-      <View style={styles.productItemContainer}>
-        <Text style={styles.productDetail}>{productName}</Text>
-        <Text style={styles.productDetail}>{quantity}</Text>
-        <Text style={[styles.userPrice,{color: userColor}]}>XX円 </Text>
-        <Text style={styles.productPrice}>/ {price}円</Text>
->>>>>>> 58d9f2c (fixed conflict and updated others' change)
       </View>
     );
   };
@@ -49,15 +39,8 @@ const Receipt = ({receipt,user}) => {
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
           <ProductItem
-<<<<<<< HEAD
             product={item}
             user={user}
-=======
-            productName={item.productName}
-            price={item.price}
-            quantity={item.quantity}
-            userColor={user.color}
->>>>>>> 58d9f2c (fixed conflict and updated others' change)
           />
         )}
       />
