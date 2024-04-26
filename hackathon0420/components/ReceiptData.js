@@ -12,7 +12,7 @@ import { icon } from '@fortawesome/fontawesome-svg-core';
 import Recipt from '../screens/receipt/[receipt_id]/index'
 import Popup from './Popup';
 
-const ReceiptData = ({receipt}) => {
+const ReceiptData = ({receipt, users}) => {
   const [expanded, setExpanded] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   
@@ -36,7 +36,7 @@ const ReceiptData = ({receipt}) => {
               pressed ? styles.pressed : {}
           ]}
         >
-          
+
           <View style={styles.title}>
             
             <Text style={styles.storeName}>{receipt.storeName}</Text>
@@ -56,7 +56,13 @@ const ReceiptData = ({receipt}) => {
 
           </View>
 
-          {isPopupVisible && <Popup isVisible={isPopupVisible} onClose={() => setIsPopupVisible(false)} style={{position: 'absolute'}}/>}
+          {isPopupVisible && <Popup 
+            isVisible={isPopupVisible}
+            onClose={() => setIsPopupVisible(false) }
+            receipt={ receipt }
+            users={users}
+            style={{position: 'absolute'}}
+          />}
           {/* ...を押したときに画面下から出るポップアップ */}
 
           <Text>{receipt.memo}</Text>

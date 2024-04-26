@@ -3,12 +3,14 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { useColorScheme } from "react-native";
+import { useColorScheme, Alert } from "react-native";
+import { HeaderBackButton } from '@react-navigation/stack';
 
 import Colors from "../constants/Colors";
 import HomeScreen from "../screens/HomeScreen";
 import NewReceiptScreen from "../screens/NewReceiptScreen";
 import EditScreen from "../screens/EditScreen";
+import ShareScreen from "../screens/ShareScreen";
 import Popup from "../components/Popup";
 
 const BottomTab = createBottomTabNavigator();   //5.画面下部にタブがある画面
@@ -60,18 +62,24 @@ function HomeNavigator() {   //7.ホーム画面の内容
       <HomeStack.Screen
         name="HomeScreen"
         component={HomeScreen}   //8.screens/HomeScreen.jsのHomeScreenの内容をここに表示
-        options={{ headerTitle: "Your receipt" }}
+        options={{ headerTitle: "レシート一覧" }}
       />
 
       <HomeStack.Screen   //HomeScreenの上に重ねる画面はここに記述！
         name="EditScreen"
         component={EditScreen}
-        options={{ headerTitle: "Edit" }}
+        options={{headerTitle: "レシートの編集"}}
       />
 
       <HomeStack.Screen
         name="Popup"
         component={Popup}
+      />
+
+      <HomeStack.Screen   //HomeScreenの上に重ねる画面はここに記述！
+        name="ShareScreen"
+        component={ShareScreen}
+        options={{ headerTitle: "レシートの共有" }}
       />
     </HomeStack.Navigator>
   );
