@@ -2,10 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList,Button } from 'react-native';
 
 const calculatedPrice = (product,id) => {
-  totalPrice  = product.quantity * product.price;
-  totalShare = product.consumedBy.reduce((sum, consumption) => sum + consumption.quantity, 0);
-  userShare  = product.consumedBy.find(consumption => consumption.userId === id)?.quantity || 0;
-  return totalPrice * userShare / totalShare;
+  const totalPrice  = product.quantity * product.price;
+  const totalShare = product.consumedBy.reduce((sum, consumption) => sum + consumption.quantity, 0);
+  const userShare  = product.consumedBy.find(consumption => consumption.userId === id)?.quantity || 0;
+  const userPrice = totalPrice * userShare / totalShare;
+  return parseFloat(userPrice.toFixed(2));
 }
 const ProductItem = ({ product,user }) => {
     return (
