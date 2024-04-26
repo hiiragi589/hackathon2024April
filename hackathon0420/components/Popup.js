@@ -2,19 +2,23 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Modal from 'react-native-modal';
 import { useNavigation } from '@react-navigation/native';   //画面遷移
+import Receipt from '../screens/receipt/[receipt_id]';
 
-const Popup = ({ isVisible, onClose }) => {
-//   const [isModalVisible, setModalVisible] = useState(false);
-
-//   const toggleModal = () => {
-//     setModalVisible(!isModalVisible);
-//   };
+const Popup = ({ isVisible, onClose, receipt, users }) => {
 
   const navigation = useNavigation();
 
+  const params ={param1: receipt, param2: users};
+
   const handleEdit = () => {
-   navigation.navigate("EditScreen"); 
+    onClose();
+    navigation.navigate("EditScreen", {receipt: receipt}); 
   };
+
+   const handleShare = () => {
+    onClose();
+    navigation.navigate("ShareScreen", params); 
+   };
 
   const handleDelete = () => {
     Alert.alert(
@@ -49,6 +53,9 @@ const Popup = ({ isVisible, onClose }) => {
             <Text style={styles.option}>削除</Text>
           </TouchableOpacity>
           {/* 他のオプションを追加 */}
+          <TouchableOpacity onPress={() => handleShare()}>
+            <Text style={styles.option}>割り勘設定</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>

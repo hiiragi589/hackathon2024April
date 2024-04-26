@@ -6,10 +6,6 @@ import { Text, View } from "../components/Themed";
 import { Button } from "react-native";   //ボタンで画面遷移
 
 import ReceiptData from "../components/ReceiptData"
-import MainScreen from '../screens/receipt/MainScreen'; 
-import Receipt from '../screens/receipt/[receipt_id]/index';
-import EditScreen from '../screens/receipt/[receipt_id]/EditScreen';
-import { Header } from '../screens/Header';
 
 const receipts = [
     {
@@ -68,23 +64,13 @@ const receipts = [
   ];
 
 const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/EditScreenInfoを参照
-    // const jsonFilePath1 = require('../testdata/recipt1.json');
-    // const jsonFilePath2 = require('../testdata/recipt2.json');
   return (
     <ScrollView style={{flex: 1}}>
-    {/* <View style={styles.container}> */}
-      {/* <Text style={styles.title}>Home</Text> */}
-      {/* <View
-        style={styles.separator}
-        lightColor="#aaa"
-        darkColor="rgba(255,255,255,0.1)"
-      /> */}
-      {/* <EditScreenInfo path="/screens/HomeScreen.js" /> */}
 
       {/* home画面の本体 */}
       {receipts.map((receipt) => (
         <View key={receipt.id}>
-        <ReceiptData receipt={receipt}/>
+        <ReceiptData receipt={ receipt } users={users}/>
         </View>
       ))}
 
@@ -95,7 +81,7 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
       {/* <Receipt receipt={receipts[0]} user={users[2]}/> */}
       {/* <Header word='Receipt1' user={users[2]}/> */}
       {/* <EditScreen receipt={receipts[0]} users={users}/> */}
-      
+
     </ScrollView>
   );
 }
