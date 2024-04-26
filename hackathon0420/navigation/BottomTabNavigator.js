@@ -6,6 +6,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useColorScheme, Alert } from "react-native";
 import { HeaderBackButton } from '@react-navigation/stack';
 
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faHome } from '@fortawesome/free-solid-svg-icons/faHome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
+
 import Colors from "../constants/Colors";
 import HomeScreen from "../screens/HomeScreen";
 import NewReceiptScreen from "../screens/NewReceiptScreen";
@@ -30,7 +34,8 @@ export default function BottomTabNavigator() {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-code" color={color} />
+            // <TabBarIcon name="ios-code" color={color} />
+            <FontAwesomeIcon icon={faHome} />
           ),
         }}
       />
@@ -40,7 +45,8 @@ export default function BottomTabNavigator() {
         options={{
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-code" color={color} />
+            // <TabBarIcon name="ios-code" color={color} />
+            <FontAwesomeIcon icon={faPlus} />
           ),
         }}
       />
