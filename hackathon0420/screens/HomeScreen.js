@@ -11,6 +11,8 @@ import { supabase } from '../lib/supabase'
 
 import ReceiptData from "../components/ReceiptData"
 import {Header} from "../screens/Header"
+import { Header_Top } from "../components/Header_Top"; 
+
 const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/EditScreenInfoを参照
     const currentuserId =2;
     const [users, setUsers] = useState([]);
@@ -19,6 +21,11 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
     const [receiptserror, setReceiptsError] = useState(null);
     const [isUsersLoading, setIsUsersLoading] = useState(true);
     const [isReceiptsLoading, setIsReceiptsLoading] = useState(true);
+    const setNewUser = (newUserID) => {
+        console.log(newUserID);
+        setSelectedUser(newUserID);
+    }
+
     const fetchUsers = async () => {
         const { data, error } = await supabase
             .from('users')
@@ -76,7 +83,7 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
             /* Error が出さないように変更しました*/
             <View style={{flex: 1}}>
             {/* home画面の本体 */}
-            <Header word="Home" user={findUserById(currentuserId)} />
+            <Header_Top word="レシート一覧" users={users} />
             {receipts.map((receipt) => (
                 <View key={receipt.id}>
                     <ReceiptData receipt={ receipt } users={users} userId={currentuserId}/>

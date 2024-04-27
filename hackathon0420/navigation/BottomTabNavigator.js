@@ -43,7 +43,6 @@ export default function BottomTabNavigator() {
         name="New Receipt"
         component={NewReceiptNavigator}
         options={{
-          headerShown: false,
           tabBarIcon: ({ color }) => (
             // <TabBarIcon name="ios-code" color={color} />
             <FontAwesomeIcon icon={faPlus} />
@@ -69,6 +68,7 @@ function HomeNavigator() {   //7.ホーム画面の内容
         name="HomeScreen"
         component={HomeScreen}   //8.screens/HomeScreen.jsのHomeScreenの内容をここに表示
         options={{ headerTitle: "レシート一覧",headerShown: false }}
+        
       />
 
       <HomeStack.Screen   //HomeScreenの上に重ねる画面はここに記述！
