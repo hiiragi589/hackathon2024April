@@ -9,6 +9,48 @@ import cv2
 
 from utils import cropImage
 
+##### CHANGED PART ######
+def parse_product_data(text):
+    lines = text.split('\n')
+    products = []
+    current_product = {}
+    
+    for i, line in enumerate(lines):
+        line = line.strip()
+        if not line:
+            continue
+        
+        if '軽' in line:
+            if '個' in line:
+                quantity_part, price_part = line.split('個')
+                quantity = quantity_part.strip()
+                price = price_part.split()[0].strip()
+                
+                if current_product.get('productName'):
+                    quantity = quantity.split(" ")[-1]
+                    current_product['quantity'] = int(quantity)
+                    current_product['pricePerPiece'] = int(int(price) / int(quantity))
+                    products.append(current_product)
+                    current_product = {}
+            else:
+                parts = line.split()
+                index = parts.index('軽')
+                if index > 0 and parts[index-1].isdigit():
+                    price = parts[index-1]
+                    product_name = ' '.join(parts[:index-1])
+                    if product_name: 
+                        current_product['productName'] = product_name
+                        current_product['quantity'] = 1
+                        current_product['pricePerPiece'] = price
+                        products.append(current_product)
+                        current_product = {}
+        else:
+            current_product['productName'] = line
+        
+        
+    return products
+#########################
+
 def convert_circled_numerals_to_arabic(text):
     circled_numeral_mapping = {
         '①': '1', '②': '2', '③': '3', '④': '4',
@@ -19,7 +61,7 @@ def convert_circled_numerals_to_arabic(text):
     }
     return ''.join(circled_numeral_mapping.get(char, char) for char in text)
 
-img = cv2.imread(".\\..\\Assets\\Receipt6.jpg") #FIXME #Connect this to img from JS
+img = cv2.imread(".\\..\\Assets\\Receipt13.jpg") #FIXME #Connect this to img from JS
 bw_image= cropImage(img)
 pil_image = Image.fromarray(bw_image)
 enhancer = ImageEnhance.Contrast(pil_image)
@@ -35,14 +77,10 @@ print(text_japanese)
 result_text = convert_circled_numerals_to_arabic(text_japanese)
 print(result_text)
 
-# Get the data using regex
-product_regex = re.compile(r"\*?\s*(.*?)\s*(\d{13})[^\r\n]*?(\d+)")
-
-# Extracting products
-products = product_regex.findall(result_text)
-
-# Display extracted products
-for product in products:
-    print(f"Product Name: {product[0]}, Barcode: {product[1]}, Price: {product[2]}")
+##### CHANGED PART ######
+product_list = parse_product_data(result_text)
+for product in product_list:
+    print(product)
+#########################
 
 ### FIXME # Connect this to JS
