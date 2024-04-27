@@ -13,6 +13,7 @@ import ReceiptData from "../components/ReceiptData"
 import MainScreen from './receipt/MainScreen'; 
 import EditScreen from "./receipt/[receipt_id]/EditScreen";
 import { Header } from "./Header";
+import { Header_Top } from "../components/Header_Top"; 
 
 const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/EditScreenInfoを参照
 
@@ -22,6 +23,12 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
     const [receiptserror, setReceiptsError] = useState(null);
     const [isUsersLoading, setIsUsersLoading] = useState(true);
     const [isReceiptsLoading, setIsReceiptsLoading] = useState(true);
+    // const [selecteduser, setSelectedUser] = useState(1);   //現在選択中のユーザー
+
+    const setNewUser = (newUserID) => {
+        console.log(newUserID);
+        setSelectedUser(newUserID);
+    }
 
     useEffect(() => {   //ユーザーのデータ取得
         const fetchUsers = async () => {
@@ -75,13 +82,12 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
         ) : (
             <ScrollView style={{flex: 1}}>
             {/* home画面の本体 */}
+            <Header_Top word="レシート一覧" users={users} />
             {receipts.map((receipt) => (
                 <View>
                 <View key={receipt.id}>
                     <ReceiptData receipt={ receipt } users={users}/>
                 </View>
-                <Header word='Receipt1' user={findUserById(3)} />
-                <EditScreen receipt={findReceiptById(1)} users={users} />
                 </View>
             ))}
             </ScrollView>
