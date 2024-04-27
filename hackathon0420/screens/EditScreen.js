@@ -12,9 +12,6 @@ export default function EditScreen({route}) {
   const [components, setComponents] = useState([]);   //新しく追加したコンポーネントの管理用
   const [isChanged, setIsChanged] = useState(false);
 
-  console.log(route.params);
-  console.log(receipt);
-
   const navigation = useNavigation();
 
   const addComponent = () => {   //新しい商品の追加
@@ -43,6 +40,7 @@ export default function EditScreen({route}) {
               onPress: () => {
                 // データを保存する処理を実行
                 // 例: saveData()
+                // ここでデータベースの更新をお願いします
                 navigation.dispatch(e.data.action); // ナビゲーションを続行
               },
             },

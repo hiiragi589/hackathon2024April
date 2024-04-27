@@ -99,7 +99,7 @@ function NewReceiptNavigator() {
       <NewReceiptStack.Screen
         name="NewReceiptScreen"
         component={NewReceiptScreen}
-        options={{ headerTitle: "Add New Receipt" }}
+        options={{ headerTitle: "新しいレシートの追加" }}
       />
     </NewReceiptStack.Navigator>
   );

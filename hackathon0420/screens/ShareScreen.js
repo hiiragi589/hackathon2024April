@@ -7,9 +7,7 @@ import { Text, View } from "../components/Themed";
 
 export default function ShareScreen({ route }) {
   const {param1, param2} = route.params;
-  console.log(route.params);
-  console.log(param1);
-  console.log(param2);
+  // console.log(route.params);
 
   const ClickableCircle = ({ letter, color }) => {
     const [isActive, setIsActive] = useState(false);

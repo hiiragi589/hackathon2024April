@@ -2,6 +2,7 @@ import * as React from "react";
 import { SafeAreaView, StyleSheet, View, Text,ActivityIndicator } from "react-native";
 
 export const Loading = ({word}) => {
+  // console.log("test");
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{word||"Loading..."}</Text>
