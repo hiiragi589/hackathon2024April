@@ -24,6 +24,12 @@ import {
 
 import { saveToDirAndReturnPath } from "./utils/lib"
 
+import { navigation } from "react-navigation"
+
+import *as MediaLIbrary from 'expo-media-library'
+
+import EditableImage from "./screens/EditableImage"
+
 export default function CameraScreen({
   navigation,
   route,
@@ -86,11 +92,13 @@ export default function CameraScreen({
   const takePicture = async () => {
     if (camera) {
       const image = await camera.takePictureAsync({})
+      console.log(image)
       setImage(image.uri)
     }
   }
 
   return (
+
     <View style={styles.container}>
       <View style={{ flex: 7, justifyContent: "center" }}>
         {image !== null ? (
@@ -180,12 +188,17 @@ export default function CameraScreen({
                   marginTop: Layout.window.height * 0.02,
                 }}
                 onPress={async () => {
-                  const newUri = (await saveToDirAndReturnPath(
-                    image!
-                  )) as string
-                  navigation.replace("EditableImage", {
-                    image: newUri.slice(newUri.lastIndexOf("/") + 1),
-                  })
+                  try{
+                    const newUri = (await saveToDirAndReturnPath(
+                      image!
+                    )) as string
+                    navigation.navigate("EditableImage", {
+                      image: newUri
+                    })}catch (error) {
+                      // Properly handle the error
+                      console.error("画像の処理またはナビゲーションに失敗しました: ", error);
+                      alert("画像の保存に失敗しました。もう一度試してください。"); // Notify user about the error
+                    }
                 }}
               >
                 <Text style={styles.completeText}>完了</Text>

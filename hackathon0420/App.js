@@ -9,11 +9,26 @@ import { useColorScheme } from "react-native";*/
 
 import React from 'react';
 import CameraScreen from './CameraScreen.tsx';
+import EditableImage from "./screens/EditableImage.js";
+import {NavigationContainer} from '@react-navigation/native';
+import{createStackNavigator} from '@react-navigation/stack';
+import{View} from 'react-native';
+
+const Stack = createStackNavigator();
+
+
 
 export default class App extends React.Component {
   render() {
     return (
-      <CameraScreen />
+      <View style={{flex:1}}>
+      <NavigationContainer>
+       <Stack.Navigator initialRouteName="CameraScreen">
+        <Stack.Screen name="CameraScreen" component={CameraScreen} />
+        <Stack.Screen name="EditableImage" component={EditableImage} />
+      </Stack.Navigator>
+      </NavigationContainer>
+      </View>
     );
   }
 }
