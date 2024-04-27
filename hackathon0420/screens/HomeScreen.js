@@ -1,5 +1,5 @@
 import { StyleSheet, ScrollView, SafeAreaView } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/core";
 
 import EditScreenInfo from "../components/EditScreenInfo";
@@ -10,21 +10,16 @@ import { Loading } from './Loading';
 import { supabase } from '../lib/supabase'
 
 import ReceiptData from "../components/ReceiptData"
-import MainScreen from './receipt/MainScreen'; 
-import EditScreen from "./receipt/[receipt_id]/EditScreen";
-import { Header } from "./Header";
-
+import {Header} from "../screens/Header"
 const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/EditScreenInfoを参照
-
+    const currentuserId =2;
     const [users, setUsers] = useState([]);
     const [userserror, setUsersError] = useState(null);
     const [receipts, setReceipts] = useState([]);
     const [receiptserror, setReceiptsError] = useState(null);
     const [isUsersLoading, setIsUsersLoading] = useState(true);
     const [isReceiptsLoading, setIsReceiptsLoading] = useState(true);
-
-    useEffect(() => {   //ユーザーのデータ取得
-        const fetchUsers = async () => {
+    const fetchUsers = async () => {
         const { data, error } = await supabase
             .from('users')
             .select();
@@ -36,10 +31,7 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
             setIsUsersLoading(false);
         }
         };
-        fetchUsers();
-    }, []);
-    useEffect(() => {   //レシートのデータ取得
-        const fetchReceipts = async () => {
+    const fetchReceipts = async () => {
         const { data, error } = await supabase
             .from('receipts')
             .select();
@@ -51,8 +43,16 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
             setIsReceiptsLoading(false);
         }
         };
-        fetchReceipts();
-    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+          fetchReceipts();  // Fetch data when the screen is focused
+          fetchUsers();
+          return () => {
+            // Optional: Any cleanup actions
+          };
+        }, [])
+    );
 
     useEffect(() => {
         // console.log(users,receipts); // This will log every time users or error changes
@@ -73,18 +73,16 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
             <Loading word='Fetching data...'/>
             </SafeAreaView>
         ) : (
-            <ScrollView style={{flex: 1}}>
+            /* Error が出さないように変更しました*/
+            <View style={{flex: 1}}>
             {/* home画面の本体 */}
+            <Header word="Home" user={findUserById(currentuserId)} />
             {receipts.map((receipt) => (
-                <View>
                 <View key={receipt.id}>
-                    <ReceiptData receipt={ receipt } users={users}/>
-                </View>
-                <Header word='Receipt1' user={findUserById(3)} />
-                <EditScreen receipt={findReceiptById(1)} users={users} />
+                    <ReceiptData receipt={ receipt } users={users} userId={currentuserId}/>
                 </View>
             ))}
-            </ScrollView>
+            </View>
         )}
         </View>
     );

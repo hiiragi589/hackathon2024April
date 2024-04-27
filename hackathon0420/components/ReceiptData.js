@@ -12,11 +12,16 @@ import { icon } from '@fortawesome/fontawesome-svg-core';
 import Recipt from '../screens/receipt/[receipt_id]/index'
 import Popup from './Popup';
 
-const ReceiptData = ({receipt, users}) => {
+
+const ReceiptData = ({receipt, users,userId}) => {
   const [expanded, setExpanded] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   
   const navigation = useNavigation();
+
+  function findUserById(userId) {
+    return users.find(user => user.id === userId);
+  }
 
     const showPopup = () => {
         setIsPopupVisible(true);
@@ -25,6 +30,38 @@ const ReceiptData = ({receipt, users}) => {
     const hidePopup = () => {
       setIsPopupVisible(false);
   };
+
+  const calculatedPriceIndividual = (product,id) => {
+    const totalPrice  = product.quantity * product.price;
+    const totalShare = product.consumedBy.reduce((sum, consumption) => sum + consumption.quantity, 0);
+    const userShare  = product.consumedBy.find(consumption => consumption.userId === id)?.quantity || 0;
+    const userPrice = totalPrice * userShare / totalShare;
+    return parseFloat(userPrice.toFixed(2));
+  }
+
+  const calculatedTotalPriceIndividual = (products, userId) => {
+    let totalUserPrice = 0;
+
+    products.forEach(product => {
+        const totalPrice = product.quantity * product.price;
+        const totalShare = product.consumedBy.reduce((sum, consumption) => sum + consumption.quantity, 0);
+        const userShare = product.consumedBy.find(consumption => consumption.userId === userId)?.quantity || 0;
+        const userPrice = totalPrice * userShare / totalShare;
+
+        totalUserPrice += userPrice; // Summing up the price share for each product
+    });
+
+    return parseFloat(totalUserPrice.toFixed(2)); // Returning the total formatted as a two-decimal float
+};
+
+const calculatedTotalPrice = (products, userId) => {
+  let totalPrice = 0;
+
+  products.forEach(product => {
+      totalPrice += product.quantity * product.price;
+  });
+  return parseFloat(totalPrice.toFixed(2)); // Returning the total formatted as a two-decimal float
+};
 
     return (
       <View>
@@ -75,7 +112,8 @@ const ReceiptData = ({receipt, users}) => {
             <View style={styles.row}>
               <Text style={styles.cell_title}>商品名</Text>
               <Text style={styles.cell_title}>数量</Text>
-              <Text style={styles.cell_title}>価格</Text>
+              <Text style={styles.cell_title}>一個あたり</Text>
+              <Text style={[styles.cell_titleindividual,{color: findUserById(userId).color}]}>{findUserById(userId).letter}さんの払う分</Text>
             </View>
             <FlatList
                 data={receipt.products}
@@ -85,9 +123,16 @@ const ReceiptData = ({receipt, users}) => {
                     <Text style={styles.cell}>{item.productName}</Text>
                     <Text style={styles.cell}>{item.quantity}</Text>
                     <Text style={styles.cell}>{item.price}</Text>
+                    <Text style={[styles.cellindividual,{color: findUserById(userId).color}]}>{calculatedPriceIndividual(item,userId)}円</Text>
                 </View>
                 )}
             />
+            <View style={styles.row}>
+              <Text style={styles.cell_title}></Text>
+              <Text style={styles.cell_title}>全体料金:</Text>
+              <Text style={styles.cell_title}>{calculatedTotalPrice(receipt.products,userId)}</Text>
+              <Text style={[styles.cell_titleindividual,{color: findUserById(userId).color}]}>{calculatedTotalPriceIndividual(receipt.products,userId)}円</Text>
+            </View>
           </View>
         )}
       </View>
@@ -128,6 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',  // Arrange items in a row
     justifyContent: 'space-between',  // Place space between the items
     alignItems: 'center',  // Center items vertically
+    marginBottom: 10,  // Add some margin at the bottom 
   },
   storeName: {
     fontSize: 25,
@@ -135,8 +181,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   icon: { 
-    marginTop:-15,
-    padding: 10,
+    marginTop: -10,  /* Increase negative margin to offset the increased padding */
+    marginLeft: -15, /* Add negative margin on left if needed */
+    marginRight: -5, /* Add negative margin on right if needed */
+    padding: 15,     /* Increase padding to make the touch area larger */
   },
   row: {
     flexDirection: 'row',
@@ -150,6 +198,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   cell_title: {
+    flex: 1,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  cellindividual: {
+    flex: 1,
+    textAlign: 'center',
+  },
+  cell_titleindividual: {
     flex: 1,
     textAlign: 'center',
     fontWeight: 'bold',

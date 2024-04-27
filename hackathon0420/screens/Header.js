@@ -5,8 +5,8 @@ export const Header = ({word,user}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.textStyle}>{word || 'Invalid'}</Text>
-      <View style={[styles.circleStyle, { backgroundColor: user.color }]}>
-        <Text style={styles.letterStyle}>{user.letter||''}</Text>
+      <View style={[styles.circleStyle, { backgroundColor: user?.color || 'black' }]}>
+        <Text style={styles.letterStyle}>{user?.letter||''}</Text>
       </View>
     </View>
   );
