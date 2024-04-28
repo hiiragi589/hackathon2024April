@@ -14,7 +14,7 @@ import {Header} from "../screens/Header"
 import { Header_Top } from "../components/Header_Top"; 
 
 const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/EditScreenInfoを参照
-    const currentuserId =2;
+    const [currentuserId,setUser] =useState(1);
     const [users, setUsers] = useState([]);
     const [userserror, setUsersError] = useState(null);
     const [receipts, setReceipts] = useState([]);
@@ -83,7 +83,7 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
             /* Error が出さないように変更しました*/
             <View style={{flex: 1}}>
             {/* home画面の本体 */}
-            <Header_Top word="レシート一覧" users={users} />
+            <Header_Top word="レシート一覧" users={users} setUser={setUser}/>
             {receipts.map((receipt) => (
                 <View key={receipt.id}>
                     <ReceiptData receipt={ receipt } users={users} userId={currentuserId}/>

@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import Popup_Users from "./Popup_User";
 
-export const Header_Top = ({word, users}) => {
+export const Header_Top = ({word, users,setUser}) => {
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [selecteduser, setSelectedUser] = useState(1);
 
@@ -15,6 +15,7 @@ export const Header_Top = ({word, users}) => {
     const hidePopup = (id) => {
         setIsPopupVisible(false);
         setSelectedUser(id);
+        setUser(id);
     }
 
     function findUserById(userId) {
