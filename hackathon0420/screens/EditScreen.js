@@ -80,7 +80,7 @@ export default function EditScreen({route}) {
       </View>
       <View>
         <FlatList
-          data={receipt.products}
+          data={receipt.new_products}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <Edit_SingleItem item={item} onChange={handleChange} />

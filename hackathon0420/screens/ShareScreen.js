@@ -46,8 +46,8 @@ const ProductItem = ({ productName, quantity, consumedBy, users, onToggleProduct
   );
 };
 
-function checkIfUserConsumed(consumedBy, id) {
-  return consumedBy.some(consumption => consumption.userId === id);
+function checkIfUserConsumed(shares, id) {
+  return shares.some(share => share.userId === id);
 }
 
 // Sharescreen component
@@ -55,14 +55,15 @@ export default function ShareScreen({ route }) {
   const navigation = useNavigation();
   const {param1, param2} = route.params;
   // Param1=Receipt, Param2=Users
-  const [productConsumption, setProductConsumption] = useState(param1.products);
+  const [productConsumption, setProductConsumption] = useState(param1.new_products);
+  console.log(productConsumption)
   const handleToggleConsumption = (productId, userId) => {
     const newProductConsumption = productConsumption.map(product =>
         product.id === productId ? {
             ...product,
-            consumedBy: checkIfUserConsumed(product.consumedBy, userId) ?
-                  product.consumedBy.filter(consume => consume.userId !== userId) // Remove user
-                  : [...product.consumedBy, { userId, quantity: 1 }] // Add user with a default quantity
+            new_shares: checkIfUserConsumed(product.new_shares, userId) ?
+                  product.new_shares.filter(consume => consume.userId !== userId) // Remove user
+                  : [...product.new_shares, { userId, quantity: 1 }] // Add user with a default quantity
           } : product
     );
     setProductConsumption(newProductConsumption);
@@ -112,47 +113,42 @@ export default function ShareScreen({ route }) {
   //   return unsubscribe;
   // }, [navigation, param1.products, productConsumption]);
 
-  const handleConfirmChanges = async (receiptId) => {
-    // Show confirmation dialog
-    Alert.alert(
-      '更新確認', // Title of the alert
-      'このレシートを更新してもよろしいですか？', // Message asking for confirmation
-      [
-        {
-          text: 'いいえ',
-          onPress: () => console.log('更新キャンセル'),
-          style: 'cancel',
-        },
-        {
-          text: 'はい',
-          onPress: async () => {
-            console.log('更新実行');
-            try {
-              const { data, error } = await supabase
-                .from('receipts')
-                .update({ products: productConsumption })
-                .match({ id: receiptId });
-  
-              if (error) {
-                console.error('Error updating receipt:', error);
-              } else {
-                console.log('Receipt updated successfully:', data);
-              }
-            } catch (err) {
-              console.error('Unexpected error during update:', err);
-            }
-            console.log('Updated Consumption:', JSON.stringify(productConsumption, null, 2));
-          },
-        },
-      ],
-      { cancelable: true }
-    );
+  const handleConfirmChanges = async (receipt) => {
+    try {
+      const batchDeletes = productConsumption.map(product =>
+        supabase
+          .from('new_shares')
+          .delete()
+          .match({ productId: product.id })
+      );
+
+      await Promise.all(batchDeletes);
+
+      const batchInserts = productConsumption.flatMap(product =>
+        product.new_shares.map(share =>
+          supabase
+            .from('new_shares')
+            .insert({
+              productId: product.id,
+              userId: share.userId,
+              quantity: share.quantity
+            })
+        )
+      );
+
+      await Promise.all(batchInserts);
+
+      console.log('All shares updated successfully');
+        
+      } catch (err) {
+        console.error('Unexpected error during update:', err);
+      }
   };
   
   return (
     <View style={styles.receiptContainer}>
       <View style={styles.edit}>
-        <Button title='Confirm Change?' onPress={() =>handleConfirmChanges(param1.id)} style={styles.button}/>
+        <Button title='Confirm Change?' onPress={() =>handleConfirmChanges(param1  )} style={styles.button}/>
       </View>
       <Text style={styles.title}>{param1.storeName}</Text>
       <View style={styles.productItemContainer}>
@@ -161,14 +157,14 @@ export default function ShareScreen({ route }) {
         <Text style={styles.circleGroup}></Text>
       </View>
       <FlatList
-        data={param1.products}
+        data={param1.new_products}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
           <ProductItem
             productName={item.productName}
             quantity={item.quantity}
             users={param2}
-            consumedBy={item.consumedBy}
+            consumedBy={item.new_shares}
             onToggleProductUser={userId => handleToggleConsumption(item.id, userId)}
           />
         )}
