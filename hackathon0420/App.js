@@ -2,7 +2,6 @@ import React,{useState,useEffect} from 'react';
 import { View,ScrollView,Text,SafeAreaView,StyleSheet,colorScheme,StatusBar } from 'react-native';
 import MainScreen from './screens/receipt/MainScreen'; 
 import Receipt from './screens/receipt/[receipt_id]/index';
-import EditScreen from './screens/receipt/[receipt_id]/EditScreen';
 import { Header } from './screens/Header';
 import { Loading } from './screens/Loading';
 import { supabase } from './lib/supabase'

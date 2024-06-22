@@ -70,6 +70,9 @@ export default function EditScreen({route}) {
 
   return (   //本体
     <ScrollView style={{flex: 1}}>
+      <View style={styles.edit}>
+        <Button title='Confirm Change?' onPress={() =>handleConfirmChanges(param1.id)} style={styles.button}/>
+      </View>
       <View style={styles.row}>
         <Text style={styles.cell}>商品名</Text>
         <Text style={styles.cell}>数量</Text>
@@ -94,6 +97,10 @@ export default function EditScreen({route}) {
 }
 
 const styles = StyleSheet.create({
+  edit: { 
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    },
   container: {
     flex: 1,
     alignItems: "center",

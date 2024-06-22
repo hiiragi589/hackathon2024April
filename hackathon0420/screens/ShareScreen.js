@@ -1,65 +1,163 @@
-import { StyleSheet, Button, FlatList, TouchableOpacity } from "react-native";
-import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { StyleSheet, Button, FlatList, TouchableOpacity,Alert } from "react-native";
+import { useState,useEffect } from "react";
 import { Text, View } from "../components/Themed";
+import { supabase } from '../lib/supabase'
+import { useNavigation } from "@react-navigation/native";
+import isEqual from 'lodash/isEqual';
 
-// import EditScreen from "./receipt/EditScreen";
-
-export default function ShareScreen({ route }) {
-  const {param1, param2} = route.params;
-  // console.log(route.params);
-
-  const ClickableCircle = ({ letter, color }) => {
-    const [isActive, setIsActive] = useState(false);
-    const handlePress = () => {
-      setIsActive(!isActive); // Toggle the active state
-    };
-    return (
-      <TouchableOpacity onPress={handlePress} style={[
-          styles.circle,
-          { backgroundColor: isActive ? color : 'white',
-          borderColor: color , }
+const ClickableCircle = ({ letter, color,startingStatus,onToggle }) => {
+  const [isActive, setIsActive] = useState(startingStatus);
+  const handlePress = () => {
+    setIsActive(!isActive); // Toggle the active state
+    onToggle();
+  };
+  return (
+    <TouchableOpacity onPress={handlePress} style={[
+        styles.circle,
+        { backgroundColor: isActive ? color : 'white',
+        borderColor: color , }
+      ]}>
+      <Text style={[
+          styles.letter,
+          { color: isActive ? 'white' : color }
         ]}>
-        <Text style={[
-            styles.letter,
-            { color: isActive ? 'white' : color }
-          ]}>
-          {letter}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  const ProductItem = ({ productName, price, quantity,users }) => {
-    return (
-      <View style={styles.productItemContainer}>
-        <Text style={styles.productDetail}>{productName}</Text>
-        <Text style={styles.productDetail}>{quantity}</Text>
-        <View style={styles.circleGroup}>
-        <FlatList
-        data={users}
-        horizontal={true}
-        keyExtractor={user => user.id.toString()}
-        renderItem={({ item }) => (
-            <ClickableCircle letter={item.letter} color={item.color}/>
-        )}
-      />
-        </View>
+        {letter}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+const ProductItem = ({ productName, quantity, consumedBy, users, onToggleProductUser }) => {
+  return (
+    <View style={styles.productItemContainer}>
+      <Text style={styles.productDetail}>{productName}</Text>
+      <Text style={styles.productDetail}>{quantity}</Text>
+      <View style={styles.circleGroup}>
+      <FlatList
+      data={users}
+      horizontal={true}
+      keyExtractor={user => user.id.toString()}
+      renderItem={({ item }) => (
+          <ClickableCircle letter={item.letter} color={item.color} startingStatus={checkIfUserConsumed(consumedBy, item.id)}
+          onToggle={()=>onToggleProductUser(item.id)}/>
+      )}
+    />
       </View>
+    </View>
+  );
+};
+
+function checkIfUserConsumed(consumedBy, id) {
+  return consumedBy.some(consumption => consumption.userId === id);
+}
+
+// Sharescreen component
+export default function ShareScreen({ route }) {
+  const navigation = useNavigation();
+  const {param1, param2} = route.params;
+  // Param1=Receipt, Param2=Users
+  const [productConsumption, setProductConsumption] = useState(param1.products);
+  const handleToggleConsumption = (productId, userId) => {
+    const newProductConsumption = productConsumption.map(product =>
+        product.id === productId ? {
+            ...product,
+            consumedBy: checkIfUserConsumed(product.consumedBy, userId) ?
+                  product.consumedBy.filter(consume => consume.userId !== userId) // Remove user
+                  : [...product.consumedBy, { userId, quantity: 1 }] // Add user with a default quantity
+          } : product
     );
+    setProductConsumption(newProductConsumption);
   };
 
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+  //     console.log('param1.products:', param1.products);
+  //     console.log('productConsumption:', productConsumption);
+  //     if(!isEqual(param1.products, productConsumption)){
+  //     // 画面から離れる前にアラートを表示
+  //     e.preventDefault(); // デフォルトの動作をキャンセル
 
+  //       Alert.alert(
+  //         '確認',
+  //         'データを保存しますか？',
+  //         [
+  //           {
+  //             text: '保存する',
+  //             onPress: () => {
+  //               // データを保存する処理を実行
+  //               // 例: saveData()
+  //               // ここでデータベースの更新をお願いします
+  //               navigation.dispatch(e.data.action); // ナビゲーションを続行
+  //             },
+  //           },
+  //           {
+  //             text: '保存しない',
+  //             style: 'cancel',
+  //             onPress: () => {
+  //               navigation.dispatch(e.data.action); // ナビゲーションを続行
+  //             }
+  //           },
+  //           {
+  //             text: 'キャンセル',
+  //             style: 'cancel',
+  //             onPress: () => e.preventDefault(), // ナビゲーションをキャンセル
+  //           },
+  //         ],
+  //         { cancelable: true }
+  //       );
+  //     }else{
+  //       navigation.dispatch(e.data.action); // ナビゲーションを続行
+  //     }
+  //   });
+
+  //   return unsubscribe;
+  // }, [navigation, param1.products, productConsumption]);
+
+  const handleConfirmChanges = async (receiptId) => {
+    // Show confirmation dialog
+    Alert.alert(
+      '更新確認', // Title of the alert
+      'このレシートを更新してもよろしいですか？', // Message asking for confirmation
+      [
+        {
+          text: 'いいえ',
+          onPress: () => console.log('更新キャンセル'),
+          style: 'cancel',
+        },
+        {
+          text: 'はい',
+          onPress: async () => {
+            console.log('更新実行');
+            try {
+              const { data, error } = await supabase
+                .from('receipts')
+                .update({ products: productConsumption })
+                .match({ id: receiptId });
+  
+              if (error) {
+                console.error('Error updating receipt:', error);
+              } else {
+                console.log('Receipt updated successfully:', data);
+              }
+            } catch (err) {
+              console.error('Unexpected error during update:', err);
+            }
+            console.log('Updated Consumption:', JSON.stringify(productConsumption, null, 2));
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+  
   return (
     <View style={styles.receiptContainer}>
       <View style={styles.edit}>
-        <Button title='Confirm Change?' style={styles.button}/>
+        <Button title='Confirm Change?' onPress={() =>handleConfirmChanges(param1.id)} style={styles.button}/>
       </View>
       <Text style={styles.title}>{param1.storeName}</Text>
       <View style={styles.productItemContainer}>
         <Text style={styles.productDetail}>商品名</Text>
         <Text style={styles.productDetail}>数</Text>
-        <Text style={styles.userPrice}></Text>
         <Text style={styles.circleGroup}></Text>
       </View>
       <FlatList
@@ -68,9 +166,10 @@ export default function ShareScreen({ route }) {
         renderItem={({ item }) => (
           <ProductItem
             productName={item.productName}
-            price={item.price}
             quantity={item.quantity}
             users={param2}
+            consumedBy={item.consumedBy}
+            onToggleProductUser={userId => handleToggleConsumption(item.id, userId)}
           />
         )}
       />
