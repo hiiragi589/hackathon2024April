@@ -33,10 +33,11 @@ const ReceiptData = ({receipt, users,userId}) => {
 
   const calculatedPriceIndividual = (product,id) => {
     const totalPrice  = product.quantity * product.price;
-    const totalShare = product.consumedBy.reduce((sum, consumption) => sum + consumption.quantity, 0);
-    const userShare  = product.consumedBy.find(consumption => consumption.userId === id)?.quantity || 0;
+    const totalShare = product.new_shares.reduce((sum, consumption) => sum + consumption.quantity, 0);
+    const userShare  = product.new_shares.find(consumption => consumption.userId === id)?.quantity || 0;
     const userPrice = totalPrice * userShare / totalShare;
-    return parseFloat(userPrice.toFixed(2));
+    const finalUserPrice = isNaN(userPrice) ? 0 : parseFloat(userPrice.toFixed(2));
+    return finalUserPrice;
   }
 
   const calculatedTotalPriceIndividual = (products, userId) => {
@@ -44,15 +45,15 @@ const ReceiptData = ({receipt, users,userId}) => {
 
     products.forEach(product => {
         const totalPrice = product.quantity * product.price;
-        const totalShare = product.consumedBy.reduce((sum, consumption) => sum + consumption.quantity, 0);
-        const userShare = product.consumedBy.find(consumption => consumption.userId === userId)?.quantity || 0;
+        const totalShare = product.new_shares.reduce((sum, share) => sum + share.quantity, 0);
+        const userShare = product.new_shares.find(share => share.userId === userId)?.quantity || 0;
         const userPrice = totalPrice * userShare / totalShare;
 
-        totalUserPrice += userPrice; // Summing up the price share for each product
+        totalUserPrice += isNaN(userPrice) ? 0 : userPrice; 
     });
 
-    return parseFloat(totalUserPrice.toFixed(2)); // Returning the total formatted as a two-decimal float
-};
+    return parseFloat(totalUserPrice.toFixed(2)); 
+  };
 
 const calculatedTotalPrice = (products, userId) => {
   let totalPrice = 0;
@@ -103,7 +104,7 @@ const calculatedTotalPrice = (products, userId) => {
           {/* ...を押したときに画面下から出るポップアップ */}
 
           <Text>{receipt.memo}</Text>
-          <Text style={styles.total}>Total: ${receipt.products.reduce((sum, product) => sum + (product.price * product.quantity), 0)}</Text>
+          <Text style={styles.total}>Total: ${receipt.new_products.reduce((sum, product) => sum + (product.price * product.quantity), 0)}</Text>
 
         </Pressable>
 
@@ -116,22 +117,22 @@ const calculatedTotalPrice = (products, userId) => {
               <Text style={[styles.cell_titleindividual,{color: findUserById(userId).color}]}>{findUserById(userId).letter}さんの払う分</Text>
             </View>
             <FlatList
-                data={receipt.products}
+                data={receipt.new_products}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                <View style={styles.row}>
-                    <Text style={styles.cell}>{item.productName}</Text>
-                    <Text style={styles.cell}>{item.quantity}</Text>
-                    <Text style={styles.cell}>{item.price}</Text>
-                    <Text style={[styles.cellindividual,{color: findUserById(userId).color}]}>{calculatedPriceIndividual(item,userId)}円</Text>
-                </View>
+                  <View style={styles.row}>
+                      <Text style={styles.cell}>{item.productName}</Text>
+                      <Text style={styles.cell}>{item.quantity}</Text>
+                      <Text style={styles.cell}>{item.price}</Text>
+                      <Text style={[styles.cellindividual,{color: findUserById(userId).color}]}>{calculatedPriceIndividual(item,userId)}円</Text>
+                  </View>
                 )}
             />
             <View style={styles.row}>
               <Text style={styles.cell_title}></Text>
               <Text style={styles.cell_title}>全体料金:</Text>
-              <Text style={styles.cell_title}>{calculatedTotalPrice(receipt.products,userId)}</Text>
-              <Text style={[styles.cell_titleindividual,{color: findUserById(userId).color}]}>{calculatedTotalPriceIndividual(receipt.products,userId)}円</Text>
+              <Text style={styles.cell_title}>{calculatedTotalPrice(receipt.new_products,userId)}</Text>
+              <Text style={[styles.cell_titleindividual,{color: findUserById(userId).color}]}>{calculatedTotalPriceIndividual(receipt.new_products, userId)}円</Text>
             </View>
           </View>
         )}

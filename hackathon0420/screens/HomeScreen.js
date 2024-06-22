@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
 
     const fetchUsers = async () => {
         const { data, error } = await supabase
-            .from('users')
+            .from('new_users')
             .select();
         if (error) {
             setUsersError(error);
@@ -38,10 +38,24 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
             setIsUsersLoading(false);
         }
         };
-    const fetchReceipts = async () => {
+    const fetchNewReceipts = async () => {
         const { data, error } = await supabase
-            .from('receipts')
-            .select();
+        .from('new_receipts')
+        .select(`
+            *,
+            new_products (
+                id,
+                productName,
+                price,
+                quantity,
+                new_shares (
+                    userId,
+                    productId,
+                    quantity
+                )
+            )
+        `);
+          
         if (error) {
             setReceiptsError(error);
             setIsReceiptsLoading(false);
@@ -49,12 +63,14 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
             setReceipts(data);
             setIsReceiptsLoading(false);
         }
-        };
+    };
+    
 
     useFocusEffect(
         useCallback(() => {
-          fetchReceipts();  // Fetch data when the screen is focused
+          fetchNewReceipts();
           fetchUsers();
+          
           return () => {
             // Optional: Any cleanup actions
           };
@@ -62,16 +78,8 @@ const HomeScreen = ({ navigation }) => {   //9.HomeScreenの内容、components/
     );
 
     useEffect(() => {
-        // console.log(users,receipts); // This will log every time users or error changes
     }, [users,receipts]);
 
-    function findUserById(userId) {
-        return users.find(user => user.id === userId);
-    }
-
-    function findReceiptById(receiptId) {
-        return receipts.find(receipt => receipt.id === receiptId);
-    }
 
     return (
         <View style={{ flex: 1 }}>
