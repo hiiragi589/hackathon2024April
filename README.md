@@ -11,3 +11,6 @@ What you need to install in your venv :
 - pip install opencv-python
 - pip install scikit-image
 - pip install pyautogui
+
+### Youtube
+Front-end : https://www.youtube.com/watch?v=KRgqbgKeehI
