@@ -14,3 +14,4 @@ What you need to install in your venv :
 
 ### Youtube
 Front-end : https://www.youtube.com/watch?v=KRgqbgKeehI
+Back-end : https://youtu.be/D-ox5dDTjhA
